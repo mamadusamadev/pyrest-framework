@@ -227,7 +227,7 @@ def benchmark_app(app: PyRestFramework, endpoint: str = '/', num_requests: int =
 
 def generate_project_template(project_name: str, output_dir: str = "."):
     """
-    Gera um template de projeto PyRest
+    Gera um template de projeto PyRest com estrutura MVC completa
     
     Args:
         project_name (str): Nome do projeto
@@ -237,33 +237,67 @@ def generate_project_template(project_name: str, output_dir: str = "."):
     
     project_path = os.path.join(output_dir, project_name)
     
-    # Cria estrutura de diretórios
+    # Cria estrutura de diretórios MVC
     directories = [
         project_path,
+        os.path.join(project_path, "controllers"),
+        os.path.join(project_path, "services"),
+        os.path.join(project_path, "models"),
+        os.path.join(project_path, "repositories"),
         os.path.join(project_path, "routes"),
         os.path.join(project_path, "middlewares"),
-        os.path.join(project_path, "models"),
         os.path.join(project_path, "utils"),
-        os.path.join(project_path, "tests")
+        os.path.join(project_path, "tests"),
+        os.path.join(project_path, "config")
     ]
     
     for dir_path in directories:
         os.makedirs(dir_path, exist_ok=True)
     
-    # Template do app principal
+    # Template do app principal com estrutura MVC
     main_app_content = f'''"""
 {project_name.title()} - PyRest Application
-Gerado automaticamente pelo PYREST-FRAMEWORK
+Gerado automaticamente pelo PYREST-FRAMEWORK v2.0.0
+Estrutura MVC completa com Controllers, Services e Models
 """
 
 from pyrest import create_app, Middlewares
+from controllers.user_controller import UserController
+from controllers.product_controller import ProductController
+from services.user_service import UserService
+from services.product_service import ProductService
+from models.user import User
+from models.product import Product
+from repositories.user_repository import UserRepository
+from repositories.product_repository import ProductRepository
 
 # Cria aplicação
 app = create_app()
 
 # Middlewares globais
 app.use(Middlewares.cors())
-app.use(Middlewares.logger())
+app.use(Middlewares.logger('dev'))
+app.use(Middlewares.json_parser())
+
+# Repositórios
+user_repository = UserRepository()
+product_repository = ProductRepository()
+
+# Services
+user_service = UserService(user_repository)
+product_service = ProductService(product_repository)
+
+# Controllers
+user_controller = UserController(user_service)
+product_controller = ProductController(product_service)
+
+# Importa as rotas
+from routes.user_routes import setup_user_routes
+from routes.product_routes import setup_product_routes
+
+# Configura as rotas
+setup_user_routes(app, user_controller)
+setup_product_routes(app, product_controller)
 
 # Rota principal
 @app.get('/')
@@ -271,7 +305,13 @@ def home(req, res):
     res.json({{
         "message": "Bem-vindo ao {project_name.title()}!",
         "framework": "PyRest Framework",
-        "version": "1.0.0"
+        "version": "2.0.0",
+        "architecture": "MVC",
+        "endpoints": {{
+            "users": "/users",
+            "products": "/products",
+            "auth": "/login, /register"
+        }}
     }})
 
 # Health check
@@ -279,50 +319,19 @@ def home(req, res):
 def health_check(req, res):
     res.json({{
         "status": "OK",
-        "service": "{project_name}"
+        "service": "{project_name}",
+        "framework": "PyRest Framework v2.0.0"
     }})
-
-# Exemplo de CRUD básico
-items = []
-
-@app.get('/api/items')
-def get_items(req, res):
-    res.json({{
-        "items": items,
-        "total": len(items)
-    }})
-
-@app.post('/api/items')
-def create_item(req, res):
-    data = req.json_data
-    if not data or 'name' not in data:
-        res.status(400).json({{"error": "Nome é obrigatório"}})
-        return
-    
-    new_item = {{
-        "id": len(items) + 1,
-        "name": data['name'],
-        "description": data.get('description', '')
-    }}
-    
-    items.append(new_item)
-    res.status(201).json(new_item)
-
-@app.get('/api/items/:id')
-def get_item(req, res):
-    try:
-        item_id = int(req.params['id'])
-        item = next((i for i in items if i['id'] == item_id), None)
-        
-        if item:
-            res.json(item)
-        else:
-            res.status(404).json({{"error": "Item não encontrado"}})
-    except ValueError:
-        res.status(400).json({{"error": "ID deve ser um número"}})
 
 if __name__ == '__main__':
     print("🚀 Iniciando {project_name.title()}...")
+    print("📚 Estrutura MVC:")
+    print("   • Controllers: Lógica de negócio")
+    print("   • Services: Camada de serviços")
+    print("   • Models: Modelos de dados")
+    print("   • Repositories: Acesso a dados")
+    print("   • Routes: Definição de rotas")
+    print("   • Middlewares: Interceptadores")
     app.listen(port=3000, debug=True)
 '''
     
@@ -333,12 +342,14 @@ if __name__ == '__main__':
     # Template do README
     readme_content = f'''# {project_name.title()}
 
-Projeto criado com **PYREST-FRAMEWORK** 🚀
+Projeto criado com **PYREST-FRAMEWORK v2.0.0** 🚀
+
+Estrutura MVC completa com Controllers, Services e Models.
 
 ## Instalação
 
 ```bash
-pip install pyrest-framework
+pip install pyrest-framework>=2.0.0
 ```
 
 ## Como executar
@@ -351,11 +362,28 @@ O servidor será iniciado em `http://localhost:3000`
 
 ## Endpoints disponíveis
 
+### Autenticação
+- `POST /login` - Login de usuário
+- `POST /register` - Registro de usuário
+
+### Usuários
+- `GET /users` - Lista todos os usuários
+- `POST /users` - Cria novo usuário
+- `GET /users/:id` - Busca usuário por ID
+- `PUT /users/:id` - Atualiza usuário
+- `DELETE /users/:id` - Remove usuário
+
+### Produtos
+- `GET /products` - Lista todos os produtos
+- `POST /products` - Cria novo produto
+- `GET /products/:id` - Busca produto por ID
+- `PUT /products/:id` - Atualiza produto
+- `DELETE /products/:id` - Remove produto
+- `GET /products/search?q=termo` - Busca produtos
+
+### Sistema
 - `GET /` - Página inicial
 - `GET /health` - Health check
-- `GET /api/items` - Lista todos os items
-- `POST /api/items` - Cria novo item
-- `GET /api/items/:id` - Busca item por ID
 
 ## Exemplo de uso
 
@@ -392,7 +420,11 @@ Desenvolvido com ❤️ usando [PYREST-FRAMEWORK](https://github.com/mamadusamad
         f.write(readme_content)
     
     # requirements.txt
-    requirements_content = '''pyrest-framework>=1.0.0
+    requirements_content = '''pyrest-framework>=2.0.1
+# Para usar Prisma com PostgreSQL, instale:
+# prisma>=0.12.0
+# psycopg2-binary>=2.9.0
+# python-dotenv>=1.0.0
 '''
     
     with open(os.path.join(project_path, 'requirements.txt'), 'w', encoding='utf-8') as f:

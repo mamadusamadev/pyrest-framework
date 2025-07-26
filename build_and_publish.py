@@ -9,21 +9,28 @@ import subprocess
 import shutil
 from pathlib import Path
 
-def run_command(command, description):
+def run_command(command, description, interactive=False):
     """Executa um comando e mostra o resultado"""
     print(f"\n🔧 {description}...")
     print(f"Comando: {command}")
     
     try:
-        result = subprocess.run(command, shell=True, check=True, 
-                              capture_output=True, text=True)
+        if interactive:
+            # Para comandos interativos (como twine upload)
+            result = subprocess.run(command, shell=True, check=True)
+        else:
+            # Para comandos não interativos
+            result = subprocess.run(command, shell=True, check=True, 
+                                  capture_output=True, text=True)
+            if result.stdout:
+                print(f"Saída: {result.stdout}")
+        
         print(f"✅ {description} concluído com sucesso!")
-        if result.stdout:
-            print(f"Saída: {result.stdout}")
         return True
     except subprocess.CalledProcessError as e:
         print(f"❌ Erro em {description}:")
-        print(f"Erro: {e.stderr}")
+        if not interactive and e.stderr:
+            print(f"Erro: {e.stderr}")
         return False
 
 def clean_build():
@@ -90,29 +97,10 @@ def test_upload():
     """Faz upload de teste para TestPyPI"""
     print("\n🧪 Fazendo upload de teste para TestPyPI...")
     
-    # Verifica se tem credenciais configuradas
-    if not os.path.exists(os.path.expanduser('~/.pypirc')):
-        print("⚠️ Arquivo ~/.pypirc não encontrado")
-        print("💡 Crie o arquivo com suas credenciais:")
-        print("""
-[distutils]
-index-servers =
-    testpypi
-    pypi
-
-[testpypi]
-repository = https://test.pypi.org/legacy/
-username = __token__
-password=pypi-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-[pypi]
-repository = https://upload.pypi.org/legacy/
-username = __token__
-password=pypi-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        """)
-        return False
+    print("\n💡 O comando vai pedir o teu token TestPyPI.")
+    print("💡 Cola o token quando solicitado (não será visível por segurança).")
     
-    return run_command('twine upload --repository testpypi dist/*', 'Upload para TestPyPI')
+    return run_command('twine upload --repository testpypi dist/*', 'Upload para TestPyPI', interactive=True)
 
 def upload_to_pypi():
     """Faz upload para PyPI oficial"""
@@ -124,7 +112,10 @@ def upload_to_pypi():
         print("❌ Upload cancelado")
         return False
     
-    return run_command('twine upload dist/*', 'Upload para PyPI')
+    print("\n💡 O comando vai pedir o teu token PyPI.")
+    print("💡 Cola o token quando solicitado (não será visível por segurança).")
+    
+    return run_command('twine upload dist/*', 'Upload para PyPI', interactive=True)
 
 def main():
     """Função principal"""

@@ -19,7 +19,7 @@ def read_requirements():
 
 setup(
     name="pyrest-framework",
-    version="1.0.1",
+    version="2.0.1",
     author="Mamadu Sama",
     author_email="mamadusama19@gmail.com",
     description="Framework Python para criação de APIs REST - Estilo Express.js",

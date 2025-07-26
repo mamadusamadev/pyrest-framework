@@ -1,16 +1,17 @@
-# PYREST-FRAMEWORK - Documentação Técnica
+# PYREST-FRAMEWORK v2.0.1 - Documentação Técnica
 
 ## Visão Geral
 
-O **PYREST-FRAMEWORK** é um framework Python minimalista e elegante para criação de APIs REST, inspirado no Express.js do Node.js. Desenvolvido especificamente para projetos acadêmicos de Análise e Desenvolvimento de Sistemas (ADS), oferece uma experiência de desenvolvimento simples e intuitiva.
+O **PYREST-FRAMEWORK** é um framework Python moderno e robusto para criação de APIs REST, inspirado no Express.js do Node.js. Desenvolvido especificamente para projetos acadêmicos de Análise e Desenvolvimento de Sistemas (ADS), oferece uma experiência de desenvolvimento profissional com arquitetura MVC completa.
 
 ### Características Principais
 
-- ✅ **Zero Dependências**: Apenas Python padrão (3.7+)
-- ✅ **Sintaxe Familiar**: Inspirado no Express.js
-- ✅ **CLI Completo**: Ferramentas de linha de comando
+- ✅ **Arquitetura MVC Completa**: Controllers, Services, Models e Repositories
+- ✅ **Integração com Prisma ORM**: Suporte a PostgreSQL, MySQL e SQLite
+- ✅ **Sistema de Validação Robusto**: Validação automática de dados
+- ✅ **CLI Avançado**: Criação automática de projetos com estrutura completa
 - ✅ **Middlewares Avançados**: CORS, logging, auth, rate limiting
-- ✅ **Validação de Dados**: Sistema robusto de validação
+- ✅ **Sintaxe Familiar**: Inspirado no Express.js
 - ✅ **Documentação Extensa**: Guias completos e exemplos
 - ✅ **Sistema de Testes**: Cobertura abrangente
 - ✅ **Exemplos Práticos**: Código real e funcional
@@ -82,7 +83,7 @@ app = create_app()
 def hello_world(req, res):
     res.json({
         "message": "Hello, PYREST-FRAMEWORK!",
-        "version": "1.0.0"
+        "version": "2.0.1"
     })
 
 # Inicia o servidor
@@ -993,15 +994,27 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](../L
 
 ## Conclusão
 
-O PYREST-FRAMEWORK oferece uma solução completa e profissional para desenvolvimento de APIs REST em Python. Com sua sintaxe familiar, documentação extensa e ferramentas avançadas, é ideal tanto para aprendizado quanto para projetos reais.
+O PYREST-FRAMEWORK v2.0.1 oferece uma solução completa e profissional para desenvolvimento de APIs REST em Python. Com sua arquitetura MVC moderna, integração com Prisma ORM, sistema de validação robusto e CLI avançado, é ideal tanto para aprendizado quanto para projetos reais em produção.
+
+### Principais Melhorias da v2.0.1
+
+- ✅ **Arquitetura MVC Completa**: Separação clara entre Controllers, Services, Models e Repositories
+- ✅ **Integração com Prisma**: Suporte nativo a PostgreSQL, MySQL e SQLite
+- ✅ **Sistema de Validação**: Validação automática de dados com múltiplos validadores
+- ✅ **CLI Avançado**: Criação automática de projetos com estrutura profissional
+- ✅ **Fallback Inteligente**: Funciona com ou sem banco de dados
+- ✅ **Documentação Completa**: Guias detalhados para todas as funcionalidades
 
 Para começar rapidamente:
 
 ```bash
-# Instalação
+# Instalação básica
 pip install pyrest-framework
 
-# Criação de projeto
+# Instalação com suporte a banco de dados
+pip install pyrest-framework[database]
+
+# Criação de projeto com estrutura MVC completa
 pyrest create minha-api
 
 # Execução

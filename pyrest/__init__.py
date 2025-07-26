@@ -22,7 +22,7 @@ https://github.com/mamadusamadev/pyrest-framework
 """
 
 
-__version__ = "1.0.1"
+__version__ = "2.0.1"
 __author__ = "Mamadu Sama"
 __email__ = "mamadusama19@gmail.com" 
 __license__ = "MIT"
@@ -35,6 +35,13 @@ from .request import Request
 from .response import Response
 from .route import Route
 from .utils import create_app
+
+# Novas funcionalidades
+from .controllers import Controller, UserController, ProductController, controller_method
+from .services import Service, UserService, ProductService
+from .models import Model, User, Product, PrismaManager, PrismaRepository, InMemoryRepository
+from .validation import ValidationSchema, ValidationError, validate_user, validate_product
+from .database import DatabaseManager, DatabaseConfig, PrismaSetup, setup_database, create_prisma_schema
 import os
 # Aliases para compatibilidade
 PyRestFramework = PyRest
@@ -48,6 +55,38 @@ __all__ = [
     "Response", 
     "Route",
     "Middlewares",
+    
+    # Controllers
+    "Controller",
+    "UserController", 
+    "ProductController",
+    "controller_method",
+    
+    # Services
+    "Service",
+    "UserService",
+    "ProductService",
+    
+    # Models
+    "Model",
+    "User",
+    "Product",
+    "PrismaManager",
+    "PrismaRepository",
+    "InMemoryRepository",
+    
+    # Validation
+    "ValidationSchema",
+    "ValidationError",
+    "validate_user",
+    "validate_product",
+    
+    # Database
+    "DatabaseManager",
+    "DatabaseConfig", 
+    "PrismaSetup",
+    "setup_database",
+    "create_prisma_schema",
     
     # Funções utilitárias
     "create_app",
