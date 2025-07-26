@@ -22,7 +22,7 @@ https://github.com/mamadusamadev/pyrest-framework
 """
 
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __author__ = "Mamadu Sama"
 __email__ = "mamadusama19@gmail.com" 
 __license__ = "MIT"

@@ -19,13 +19,13 @@ def read_requirements():
 
 setup(
     name="pyrest-framework",
-    version="1.0.0",
-    author="Mamadu Sama",  # Substitua pelo seu nome
-    author_email="mamadusama19@gmail.com",  # Substitua pelo seu email
+    version="1.0.1",
+    author="Mamadu Sama",
+    author_email="mamadusama19@gmail.com",
     description="Framework Python para criação de APIs REST - Estilo Express.js",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
-    url="https://github.com/mamadusamadev/pyrest-framework",  # Substitua pela sua URL
+    url="https://github.com/mamadusamadev/pyrest-framework",
     project_urls={
         "Bug Tracker": "https://github.com/mamadusamadev/pyrest-framework/issues",
         "Documentation": "https://github.com/mamadusamadev/pyrest-framework/blob/main/docs/README.md",
